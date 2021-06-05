@@ -28,12 +28,12 @@ GePGCN is a framework based on a GCN that uses genomic gene synteny information,
 
 ### Steps
 #### Step1: construct the network
-> mkdir result
-> mkdir others
-> cat test_data/faa/*.faa > whole.faa
-> python construction.py
-> **Note there are several parameters can be tuned. Please refer to the construction.py file for detailed description of all parameters**
+> mkdir result  
+> mkdir others  
+> cat test_data/faa/*.faa > whole.faa  
+> python construction.py  
+> **Note there are several parameters can be tuned. Please refer to the construction.py file for detailed description of all parameters**  
 
 #### Step2: run the framework
-> python model_and_train.py 
-> **Note there are several parameters can be tuned. Please refer to the model_and_train.py file for detailed description of all parameters**
+> python model_and_train.py   
+> **Note there are several parameters can be tuned. Please refer to the model_and_train.py file for detailed description of all parameters**  
