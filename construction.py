@@ -21,23 +21,46 @@ parser.add_argument('--input_cds_dir', type=str, default='./test_data/CDS/')
 args = parser.parse_args()
 #args = parser.parse_args([])
 
-def blast_preprocess(blastp_result_file):
+def blast_preprocess(blastp_result_file, fasta_file):
     # fliter the blast result #
-    # note: blastp --outfmt 7 #
+    # note: blastp --outfmt 6,7 #
+    pro = {}
+    with open(fasta_file) as f:
+        for line in f:
+            line = line.strip('\n')
+            if line.startswith('>'):
+                k = line.split(' ')[0][1: ]
+                pro[k] = ''
+            else:
+                pro[k] += line
+    pro_len_dict = {}
+    for k, v in pro.items():
+        pro_len_dict[k] = len(v)
+
     read_file =  open(blastp_result_file, 'r', encoding='utf-8')
     print('read blast file successfully')
+    
     write_file = open('./input/similar_protein.txt', 'w+', encoding='utf-8')
     for line in read_file:
+        line = line.strip('\n')
+        line = line.replace(':', '|')
         if line.startswith('#'):
             continue
-        if float(line.split('\t')[2]) < 80.0:
+        q_pro_length = pro_len_dict[line.split('\t')[0]]
+        s_pro_length = pro_len_dict[line.split('\t')[1]]
+        match_length = int(line.split('\t')[3])
+        gap = int(line.split('\t')[4])
+        cover_ratio = (match_length*2+gap)/(q_pro_length+s_pro_length)
+        if float(line.split('\t')[2]) < 65.0:
             continue
-        line = line.replace(':', '|')
+        if float(cover_ratio) < 0.65:
+            continue
         write_content = line.split('\t')[0]+'\t'+line.split('\t')[1] + '\t'+line.split('\t')[2]+'\n'
         write_file.write(write_content)
     write_file.close()
     print('write filter file successfully')
     print('step 1: blast result complete')
+
 
 def generate_stat(fliter_input_path):
     # stat species and pro sequence #
@@ -505,13 +528,12 @@ def construct_id_node2vec(node_number):
     
     print('step 12: embedding node id successfully')  
 '''
-blast_preprocess(args.input_blast)
+blast_preprocess(args.input_blast, , args.input_fasta)
 fliter_input_path = './input/similar_protein.txt'
 generate_stat(fliter_input_path)
 '''
 stat_input_path = './input/unique_unique.csv'
 generate_node(stat_input_path, args.input_fasta)
-pro_id_input_path = './input/pro_id.txt'
 id_pro_dict, pro_id_dict, id_scale_dict = node_scale_generate(args.input_pro_id)
 KO_ko_input_path = 'input/KO_ko.txt'
 pathway_info_path = 'input/pathway_info.txt'
