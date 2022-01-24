@@ -510,7 +510,7 @@ origin_train_node = list(feature_df[feature_df['type'] == 0].id)
 origin_test_node = list(feature_df[feature_df['type'] == 1].id)
 total_node = len(feature_df)
 self_iter = 0
-while train_node/total_node < 0.95:
+while train_node/total_node < 0.90:
     # train #
     print('iter: ', self_iter)
     test_node = list(feature_df[feature_df['type'] != 0].id)
