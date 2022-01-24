@@ -292,6 +292,7 @@ def feature_matrix_generate(pro_K_file, id_pro_dict, pro_id_dict, id_scale_dict,
     label_list_new = [ko_info_dict[i] for i in label_list] 
     x, y = zip(*sorted(dict(Counter(label_list_new)).items()))
     x = [i for i in x]
+    y = [i for i in y]
     plt.figure(figsize=(10,20))
     sns.barplot(y,x, palette=sns.cubehelix_palette(45, start=.5, rot=-.75), orient='h')
     plt.xlabel('Count', fontdict={'size' : 16})
